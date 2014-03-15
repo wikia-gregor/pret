@@ -73,7 +73,7 @@ Parse.Cloud.define('addReport', function(request, response) {
 		now = getTimestamp();
 
 	report.save({
-		geoPoint: geo_point,
+		geo_point: geo_point,
 		name: name,
 		category_id: category_id,
 		status_id: status_id,
@@ -84,6 +84,7 @@ Parse.Cloud.define('addReport', function(request, response) {
 		success: function(report) {
 			var reportUpdate = new ReportUpdate();
 			reportUpdate.save({
+				geo_point: geo_point,
 				user: Parse.User.current(),
 				description: description,
 				place_id: report.id,
