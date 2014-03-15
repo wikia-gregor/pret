@@ -1,20 +1,41 @@
 <!doctype html>
-<head>
-	<meta charset="utf-8">
-	<title>PRET - Public Roads Evaluation Tool</title>
-	<meta name="viewport" content="width=device-width">
-	<link rel="stylesheet" href="css/reset.css">
-	<link rel="stylesheet" href="css/styles.css">
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.17.min.js"></script>
-</head>
-<body>
-<div id="main">
-	<h1>PRET</h1>
-	<h2>Public Roads Evaulation Tool</h2>
-	<p>Together we make our roads <strong>pret</strong>ty.</p>
-</div>
-<script type="text/javascript" src="/js/config.js"></script>
-<script type="text/javascript" src="/js/init.js"></script>
-</body>
+<html xmlns:fb="http://ogp.me/ns/fb#">
+	<head>
+		<meta charset="utf-8">
+		<title>PRET - Public Roads Evaluation Tool</title>
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/styles.css">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script src="http://www.parsecdn.com/js/parse-1.2.17.min.js"></script>
+		<script src="/js/config.js"></script>
+		<script type="text/javascript">
+			Parse.initialize( config.parse.appId, config.parse.jsKey );
+		</script>
+	</head>
+	<body>
+		<div id="fb-root"></div>
+		<div id="main">
+			<button id="fbLogin">Login</button>
+			<button id="fbLogout">Logout</button>
+			<h1>PRET</h1>
+			<h2>Public Roads Evaulation Tool</h2>
+			<p>Together we make our roads <strong>pret</strong>ty.</p>
+			<h3>Recently added reports</h3>
+			<ul id="recentReports"></ul>
+			<h3>Reports</h3>
+			<p>Total number of reports: <span id="reportsNo"></span></p>
+			<canvas id="reportsBars" width="400" height="250"></canvas>
+			<canvas id="reportsByCityBars" width="400" height="250"></canvas>
+			<h3>Categories</h3>
+			<canvas id="categoriesPie" width="400" height="250"></canvas>
+		</div>
+		<script src="/js/vendors/mustache/mustache.js"></script>
+		<script src="/js/app.js"></script>
+
+		<script src="/js/vendors/chartjs/chart.js"></script>
+		<script src="/js/charts/reports.js"></script>
+		<script src="/js/charts/categories.js"></script>
+		<footer>This is a hack-a-thon project made during <a href="http://ceehack.org/" target="_blank">Central Open Data Hackathon</a> by team of: <a href="https://github.com/wikia-gregor" target="_blank">Gregor</a>, <a href="https://github.com/aquilax" target="_blank">aquilax</a>, <a href="https://github.com/kamilkoterba" target="_blank">Kamil</a>, <a href="https://github.com/nandy-andy" target="_blank">nAndy</a> and <a href="" target="_blank">Łukasz</a> from <a href="http://www.wikia.com" target="_blank">Wikia</a>.</footer>
+	</body>
 </html>
