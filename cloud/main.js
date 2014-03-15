@@ -1,3 +1,7 @@
+function getTimestamp(){
+	return new Date().getTime();
+}
+
 // Get list of categories
 Parse.Cloud.define('getCategories', function(request, response) {
 	var Category = Parse.Object.extend('Category');
@@ -57,15 +61,95 @@ Parse.Cloud.define('getNumberOfReports', function(request, response) {
 });
 
 Parse.Cloud.define('addReport', function(request, response) {
-	response.error('NOT IMPLEMENTED');
+	var geo_point = request.params.geo_point,
+		name = request.params.name,
+		category_id = request.params.category_id,
+		status_id = request.params.status_id,
+		description = request.params.status_id,
+		file_url = request.params.file_url,
+		Report = Parse.Object.extend('Report'),
+		ReportUpdate = Parse.Object.extend('ReportUpdate'),
+		report = new Report(),
+		now = getTimestamp();
+
+	report.save({
+		geoPoint: geo_point,
+		name: name,
+		category_id: category_id,
+		status_id: status_id,
+		description: description,
+		file_url: file_url,
+		created: now
+	}, {
+		success: function(report) {
+			var reportUpdate = new ReportUpdate();
+			reportUpdate.save({
+				user: Parse.User.current(),
+				description: description,
+				place_id: report.id,
+				file_url: file_url,
+				status_id: status_id,
+				created: now
+			}, {
+				success: function(reportUpdate) {
+					report.updates = [reportUpdate];
+					response.success(report);
+				}
+			})
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	})
 });
 
 Parse.Cloud.define('addReportUpdate', function(request, response) {
-	response.error('NOT IMPLEMENTED');
+	var report_id = request.params.report_id || null,
+		description = request.params.description || '',
+		status_id = request.params.status_id,
+		file_url = request.params.file_url
+		ReportUpdate = Parse.Object.extend('ReportUpdate'),
+		reportUpdate = new ReportUpdate();
+	// TODO: validate data
+	reportUpdate.save({
+		report_id: report_id,
+		description: description,
+		status_id: status_id,
+		file_url: file_url
+	}, {
+		success: function(reportUpdate) {
+			response.success(reportUpdate);
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	});
+
 });
 
 Parse.Cloud.define('getReport', function(request, response) {
-	response.error('NOT IMPLEMENTED');
+	var report_id = request.params.report_id,
+		Report = ParseObject.extend('Report'),
+		ReportUpdate = Parse.Object.extend('ReportUpdate'),
+		ReportUpdateCollection = Parse.Collection.extend({
+			model: ReportUpdate
+		}),
+		report = new Report(),
+		query = new Parse.Query(Report);
+	query.equalTo('id', report_id);
+	query.first({
+		success: function (report) {
+			var reportUpdateCollection = new ReportUpdateCollection();
+			query = new Parse.Query(ReportUpdate);
+			query.equalTo('report_id', report_id);
+			reportUpdateCollection = query.collection();
+			report.updates = reportUpdateCollection;
+			response.success(report);
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	});
 });
 
 Parse.Cloud.define('getNearestReports', function(request, response) {
