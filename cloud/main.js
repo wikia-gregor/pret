@@ -184,3 +184,54 @@ Parse.Cloud.define('getPointsInArea', function(request, response) {
 		}
 	});
 });
+
+Parse.Cloud.define('addCategory', function(request, response) {
+	var name = request.params.name,
+		Category = Parse.Object.extend('Category' ),
+		category = new Category()
+	category.save({
+			name: name,
+			created: getTimestamp()
+		}, {
+			success: function(results) {
+				response.success(results);
+			},
+			error: function(error) {
+				response.error(error);
+			}
+	});
+});
+
+Parse.Cloud.define('addStatus', function(request, response) {
+	var name = request.params.name,
+		Status = Parse.Object.extend('Status'),
+		status = new Status()
+	status.save({
+		name: name,
+		created: getTimestamp()
+	}, {
+		success: function(results) {
+			response.success(results);
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	});
+});
+
+Parse.Cloud.define('getLatestReports', function(request, response) {
+	var limit = request.params.limit || 10,
+		Report = Parse.Object.extend('Report'),
+		ReportCollection = Parse.Collection.extend({
+			model: Report,
+			query: (new Parse.Query(Report)).limit(limit)
+		});
+	new ReportCollection().fetch({
+		success: function (reports) {
+			response.success(reports);
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	});
+});
