@@ -48,7 +48,7 @@ Parse.Cloud.define('getNumberOfReports', function(request, response) {
 	if ( status_id ) {
 		query.equalTo('status_id', status_id);
 	}
-	var dateFilter = new Date().getTime() - (86400000 * days)
+	var dateFilter = new Date().getTime() - (86400000 * days);
 	query.greaterThan('created', dateFilter);
 	query.count({
 		success: function(count) {
@@ -57,7 +57,7 @@ Parse.Cloud.define('getNumberOfReports', function(request, response) {
 		error: function(error) {
 			response.error(error);
 		}
-	})
+	});
 });
 
 Parse.Cloud.define('addReport', function(request, response) {
@@ -95,19 +95,19 @@ Parse.Cloud.define('addReport', function(request, response) {
 					report.updates = [reportUpdate];
 					response.success(report);
 				}
-			})
+			});
 		},
 		error: function(error) {
 			response.error(error);
 		}
-	})
+	});
 });
 
 Parse.Cloud.define('addReportUpdate', function(request, response) {
 	var report_id = request.params.report_id || null,
 		description = request.params.description || '',
 		status_id = request.params.status_id,
-		file_url = request.params.file_url
+		file_url = request.params.file_url,
 		ReportUpdate = Parse.Object.extend('ReportUpdate'),
 		reportUpdate = new ReportUpdate();
 	// TODO: validate data
@@ -129,7 +129,7 @@ Parse.Cloud.define('addReportUpdate', function(request, response) {
 
 Parse.Cloud.define('getReport', function(request, response) {
 	var report_id = request.params.report_id,
-		Report = ParseObject.extend('Report'),
+		Report = Parse.Object.extend('Report'),
 		ReportUpdate = Parse.Object.extend('ReportUpdate'),
 		ReportUpdateCollection = Parse.Collection.extend({
 			model: ReportUpdate
@@ -153,5 +153,34 @@ Parse.Cloud.define('getReport', function(request, response) {
 });
 
 Parse.Cloud.define('getNearestReports', function(request, response) {
-	response.error('NOT IMPLEMENTED');
+	var limit = request.params.limit,
+		geo_point = request.params.geo_point || null,
+		Report = Parse.Object.extend('Report'),
+		query = new Parse.Query(Report);
+	query.near("geo_point", geo_point);
+	query.limit(limit);
+	query.find({
+		success: function(reports) {
+			response.success(reports);
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	});
+});
+
+Parse.Cloud.define('getPointsInArea', function(request, response) {
+	var south_west = request.params.south_west,
+		north_east = request.params.north_east,
+		Report = Parse.Object.extend('Report'),
+		query = new Parse.Query(Report);
+	query.withinGeoBox('geo_point', south_west, north_east);
+	query.find({
+		success: function(reports) {
+			response.success(reports);
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	});
 });
