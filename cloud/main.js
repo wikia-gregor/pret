@@ -1,9 +1,12 @@
 // TODO: validate data
 
-function getTimestamp(){
-	return new Date().getTime();
+function getTimestamp() {
+	return new Date();
 }
 
+function daysAgo(days) {
+	return new Date(getTimestamp().getTime() - (days * 86400000));
+}
 
 var Category = Parse.Object.extend('Category');
 	CategoryCollection = Parse.Collection.extend({
@@ -58,8 +61,7 @@ Parse.Cloud.define('getNumberOfReports', function(request, response) {
 	if ( status_id ) {
 		query.equalTo('status_id', status_id);
 	}
-	var dateFilter = getTimestamp() - (86400000 * days);
-	query.greaterThan('created', dateFilter);
+	query.greaterThan('created', daysAgo(days));
 	query.count({
 		success: function(count) {
 			response.success(count);
@@ -254,9 +256,8 @@ Parse.Cloud.define('getLatestReports', function(request, response) {
 
 Parse.Cloud.define('getReportsPerCategory', function(request, response) {
 	var days = request.params.days || 10,
-		query = new Parse.Query(Report),
-		dateFilter = getTimestamp - (86400000 * days);
-	query.greaterThan('created', dateFilter);
+		query = new Parse.Query(Report);
+	query.greaterThan('created', daysAgo(days));
 	query.find({
 		success: function(reports) {
 			var aggregate = {};
