@@ -56,3 +56,18 @@ Parse.Cloud.define('getNumberOfReports', function(request, response) {
 	})
 });
 
+Parse.Cloud.define('addReport', function(request, response) {
+	response.error('NOT IMPLEMENTED');
+});
+
+Parse.Cloud.define('addReportUpdate', function(request, response) {
+	response.error('NOT IMPLEMENTED');
+});
+
+Parse.Cloud.define('getReport', function(request, response) {
+	response.error('NOT IMPLEMENTED');
+});
+
+Parse.Cloud.define('getNearestReports', function(request, response) {
+	response.error('NOT IMPLEMENTED');
+});
