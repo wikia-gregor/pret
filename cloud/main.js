@@ -1,3 +1,5 @@
+require('cloud/app.js');
+
 function getTimestamp(){
 	return new Date().getTime();
 }
