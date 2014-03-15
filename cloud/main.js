@@ -76,7 +76,7 @@ Parse.Cloud.define('addReport', function(request, response) {
 		category_id = request.params.category_id,
 		status_id = request.params.status_id,
 		description = request.params.status_id,
-		file_url = request.params.file_url,
+		file = request.params.file,
 		category = new Category(),
 		status = new Status(),
 		now = getTimestamp();
@@ -92,7 +92,7 @@ Parse.Cloud.define('addReport', function(request, response) {
 		status_id: status_id,
 		status: status,
 		description: description,
-		file_url: file_url,
+		file: file,
 		created: now
 	}, {
 		success: function(report) {
@@ -103,7 +103,7 @@ Parse.Cloud.define('addReport', function(request, response) {
 				description: description,
 				report_id: report.id,
 				report: report,
-				file_url: file_url,
+				file: file,
 				status_id: status_id,
 				status: status,
 				created: now
@@ -127,13 +127,13 @@ Parse.Cloud.define('addReportUpdate', function(request, response) {
 	var report_id = request.params.report_id || null,
 		description = request.params.description || '',
 		status_id = request.params.status_id,
-		file_url = request.params.file_url;
+		file = request.params.file;
 
 	new ReportUpdate().save({
 		report_id: report_id,
 		description: description,
 		status_id: status_id,
-		file_url: file_url
+		file: file
 	}, {
 		success: function(reportUpdate) {
 			response.success(reportUpdate);
