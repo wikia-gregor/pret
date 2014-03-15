@@ -65,6 +65,13 @@ body {
 	display: inline;
 }
 
+.legend span {
+	display: block;
+	width: 20px;
+	height: 10px;
+	margin: 5px 5px 0 0;
+}
+
 footer {
 	margin: 5px auto;
 	width: 500px;
