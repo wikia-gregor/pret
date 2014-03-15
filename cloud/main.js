@@ -25,7 +25,6 @@ var Category = Parse.Object.extend('Category');
 		model: ReportUpdate
 	});
 
-
 // Get list of categories
 Parse.Cloud.define('getCategories', function(request, response) {
 	new CategoryCollection().fetch({
@@ -53,8 +52,9 @@ Parse.Cloud.define('getStatuses', function(request, response) {
 // Get list of statuses
 Parse.Cloud.define('getNumberOfReports', function(request, response) {
 	var days = request.params.days || 10,
-		status_id = request.params.status_id || null,
+		status_id = request.params.status_id || false,
 		query = new Parse.Query(Report);
+
 	if ( status_id ) {
 		query.equalTo('status_id', status_id);
 	}
@@ -77,13 +77,20 @@ Parse.Cloud.define('addReport', function(request, response) {
 		status_id = request.params.status_id,
 		description = request.params.status_id,
 		file_url = request.params.file_url,
+		category = new Category(),
+		status = new Status(),
 		now = getTimestamp();
+
+	category.id = category_id;
+	status.id = status_id;
 
 	new Report().save({
 		geo_point: geo_point,
 		name: name,
 		category_id: category_id,
+		category: category,
 		status_id: status_id,
+		status: status,
 		description: description,
 		file_url: file_url,
 		created: now
@@ -94,14 +101,19 @@ Parse.Cloud.define('addReport', function(request, response) {
 				geo_point: geo_point,
 				user: Parse.User.current(),
 				description: description,
-				place_id: report.id,
+				report_id: report.id,
+				report: report,
 				file_url: file_url,
 				status_id: status_id,
+				status: status,
 				created: now
 			}, {
 				success: function(reportUpdate) {
 					report.updates = [reportUpdate];
 					response.success(report);
+				},
+				error: function(error) {
+					response.error(error);
 				}
 			});
 		},
@@ -116,6 +128,7 @@ Parse.Cloud.define('addReportUpdate', function(request, response) {
 		description = request.params.description || '',
 		status_id = request.params.status_id,
 		file_url = request.params.file_url;
+
 	new ReportUpdate().save({
 		report_id: report_id,
 		description: description,
@@ -135,6 +148,7 @@ Parse.Cloud.define('addReportUpdate', function(request, response) {
 Parse.Cloud.define('getReport', function(request, response) {
 	var report_id = request.params.report_id,
 		query = new Parse.Query(Report);
+
 	query.equalTo('id', report_id);
 	query.first({
 		success: function (report) {
@@ -159,8 +173,9 @@ Parse.Cloud.define('getReport', function(request, response) {
 
 Parse.Cloud.define('getNearestReports', function(request, response) {
 	var limit = request.params.limit,
-		geo_point = request.params.geo_point || null,
+		geo_point = request.params.geo_point,
 		query = new Parse.Query(Report);
+
 	query.near('geo_point', geo_point);
 	query.limit(limit);
 	query.find({
@@ -177,6 +192,7 @@ Parse.Cloud.define('getPointsInArea', function(request, response) {
 	var south_west = request.params.south_west,
 		north_east = request.params.north_east,
 		query = new Parse.Query(Report);
+
 	query.withinGeoBox('geo_point', south_west, north_east);
 	query.find({
 		success: function(reports) {
@@ -206,6 +222,7 @@ Parse.Cloud.define('addCategory', function(request, response) {
 
 Parse.Cloud.define('addStatus', function(request, response) {
 	var name = request.params.name;
+
 	new Status().save({
 		name: name,
 		created: getTimestamp()
@@ -244,23 +261,12 @@ Parse.Cloud.define('getReportsPerCategory', function(request, response) {
 		success: function(reports) {
 			var aggregate = {};
 			reports.forEach(function(report) {
-				if (!aggregate[report.category_id]) {
-					aggregate[report.category_id] = 0;
+				if (!aggregate[report.category.name]) {
+					aggregate[report.category.name] = 0;
 				}
-				aggregate[report.category_id] += 1;
+				aggregate[report.category.name] += 1;
 			});
-			new CategoryCollection().fetch({
-				success: function(results) {
-					var result = {};
-					results.forEach(function(category){
-						result[category.get('name')] = aggregate[category.get('name')] || 0;
-					});
-					response.success(result);
-				},
-				error: function(error) {
-					response.error(error);
-				}
-			});
+			response.success(aggregate);
 		},
 		error: function(error) {
 			response.error(error);
