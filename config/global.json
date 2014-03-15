@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "PRET": {
+            "applicationId": "6vOA5NrpkDUvKMUT5gEJXIgVNB0f6ylgvlvC2RGj", 
+            "masterKey": "d62KrzWUMTPfkmaL1A6PWJsxCnaaiDpQhZkOIuft"
+        }, 
+        "_default": {
+            "link": "PRET"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.17"
+    }
+}
