@@ -39,6 +39,7 @@ body {
     line-height: 13px;
 }
 
-#fbLogin {
+#fbLogin, #fbLogout {
+	display: none;
 	float: right;
 }
