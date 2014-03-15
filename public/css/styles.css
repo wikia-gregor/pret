@@ -43,3 +43,38 @@ body {
 	display: none;
 	float: right;
 }
+
+#recentReports {
+	list-style: none;
+	padding: 0;
+}
+
+#recentReports > li {
+	border-top: 1px #ccc solid;
+	clear: both;
+	min-width: 60px;
+	margin: 5px 0;
+}
+
+#recentReports > li > img {
+	float: left;
+	padding: 0 10px 0 5px;
+}
+
+#recentReports > li > p {
+	display: inline;
+}
+
+footer {
+	margin: 5px auto;
+	width: 500px;
+	font-size: small;
+}
+
+footer a {
+	text-decoration: none;
+}
+
+.clear {
+	clear: both;
+}
