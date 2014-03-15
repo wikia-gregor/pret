@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="css/reset.css">
 		<link rel="stylesheet" href="css/styles.css">
+		<link rel="stylesheet" href="css/spinner.css">
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script src="http://www.parsecdn.com/js/parse-1.2.17.min.js"></script>
 		<script src="/js/config.js"></script>
@@ -22,13 +23,32 @@
 			<h2>Public Roads Evaulation Tool</h2>
 			<p>Together we make our roads <strong>pret</strong>ty.</p>
 			<h3>Recently added reports</h3>
-			<ul id="recentReports"></ul>
-			<h3>Reports</h3>
-			<p>Total number of reports: <span id="reportsNo"></span></p>
+			<ul id="recentReports">
+				<div class="spinner">
+					<div class="dot1"></div>
+					<div class="dot2"></div>
+				</div>
+			</ul>
+			<h3>Reports Stats</h3>
+			<p>Total number of reports: <span id="reportsNo">0</span></p>
+			<div id="reportsBarsLoader" class="spinner">
+				<div class="dot1"></div>
+				<div class="dot2"></div>
+			</div>
 			<canvas id="reportsBars" width="400" height="250"></canvas>
+			<div id="reportsByCityBarsLoader" class="spinner">
+				<div class="dot1"></div>
+				<div class="dot2"></div>
+			</div>
 			<canvas id="reportsByCityBars" width="400" height="250"></canvas>
 			<h3>Categories</h3>
-			<canvas id="categoriesPie" width="400" height="250"></canvas>
+			<div id="categoriesPieLoader" class="spinner">
+				<div class="dot1"></div>
+				<div class="dot2"></div>
+			</div>
+			<div id="categoriesPieContainer">
+				<canvas id="categoriesPie" width="400" height="250"></canvas>
+			</div>
 		</div>
 		<script src="/js/vendors/mustache/mustache.js"></script>
 		<script src="/js/app.js"></script>
