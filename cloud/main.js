@@ -75,7 +75,7 @@ Parse.Cloud.define('addReport', function(request, response) {
 		name = request.params.name,
 		category_id = request.params.category_id,
 		status_id = request.params.status_id,
-		description = request.params.status_id,
+		description = request.params.description,
 		file = request.params.file,
 		category = new Category(),
 		status = new Status(),
