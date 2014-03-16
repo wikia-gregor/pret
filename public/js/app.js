@@ -38,7 +38,6 @@ $( document ).ready( function() {
 	} );
 
 	// Getting & displaying latest reports
-	Parse.Cloud.run( 'getLatestReports' );
 	Parse.Cloud.run( 'getLatestReports', {}, {
 		success: function( result ) {
 			var recentReports = result.models;
@@ -58,7 +57,7 @@ $( document ).ready( function() {
 			recentReportsWrapper.html( output );
 		},
 		error: function( error ) {
-			console.log( 'ERROR: Could not get latest reports (' + error.message + ')' );
+			console.error( 'Could not get latest reports (' + error.message + ')' );
 		}
 	});
 } );
