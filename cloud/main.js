@@ -11,11 +11,13 @@ function daysAgo(days) {
 
 function getPlaceData( geoPoint ) {
 	return Parse.Cloud.httpRequest({
-		url: ['https://maps.googleapis.com/maps/api/geocode/json?latlng=',
+		url: [
+			'https://maps.googleapis.com/maps/api/geocode/json?latlng=',
 			geoPoint.latitude,
 			',',
 			geoPoint.longitude,
-			'&sensor=false'].join('')
+			'&sensor=false'
+		].join('')
 	});
 }
 
@@ -341,6 +343,8 @@ Parse.Cloud.define('getReports', function(request, response) {
 	if (status_id) {
 		query.equalTo('status_id', status_id);
 	}
+	query.include('category')
+	query.include('status');;
 	query.skip(offset);
 	query.limit(limit);
 	query.find({
