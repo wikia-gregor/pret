@@ -8,6 +8,35 @@ function daysAgo(days) {
 	return new Date(getTimestamp().getTime() - (days * 86400000));
 }
 
+
+function getPlaceData( geoPoint ) {
+	return Parse.Cloud.httpRequest({
+		url: ['https://maps.googleapis.com/maps/api/geocode/json?latlng=',
+			geoPoint.latitude,
+			',',
+			geoPoint.longitude,
+			'&sensor=false'].join('')
+	});
+}
+
+function getGeoFields (data) {
+	var result = {
+		locality: '',
+		country: ''
+	};
+	if (data && data.results && data.results[0]) {
+		data.results[0].address_components.forEach(function(row) {
+			if (row.types.indexOf('locality') != -1 ) {
+				result.locality = row.long_name;
+			}
+			if (row.types.indexOf('country')) {
+				result.country = row.long_name;
+			}
+		});
+	}
+	return result;
+}
+
 var Category = Parse.Object.extend('Category');
 	CategoryCollection = Parse.Collection.extend({
 		model: Category
@@ -65,7 +94,7 @@ Parse.Cloud.define('getNumberOfReports', function(request, response) {
 	if ( category_id ) {
 		query.equalTo('category_id', category_id);
 	}
-	query.greaterThan('createdAt', daysAgo(days));
+	query.greaterThan('created', daysAgo(days));
 	query.count({
 		success: function(count) {
 			response.success(count);
@@ -86,49 +115,56 @@ Parse.Cloud.define('addReport', function(request, response) {
 		user = request.params.user,
 		category = new Category(),
 		status = new Status(),
-		now = getTimestamp();
-
+		now = getTimestamp(),
+		file_url = file ? file.url() : '';
 	category.id = category_id;
 	status.id = status_id;
-
-	new Report().save({
-		geo_point: geo_point,
-		name: name,
-		category_id: category_id,
-		category: category,
-		status_id: status_id,
-		status: status,
-		description: description,
-		user: user,
-		file: file,
-		created: now
-	}, {
-		success: function(report) {
-			var reportUpdate = new ReportUpdate();
-			reportUpdate.save({
-				geo_point: geo_point,
-				user: Parse.User.current(),
-				description: description,
-				report_id: report.id,
-				report: report,
-				file: file,
-				status_id: status_id,
-				status: status,
-				user: user,
-				created: now
-			}, {
-				success: function(reportUpdate) {
-					report.updates = [reportUpdate];
-					response.success(report);
-				},
-				error: function(error) {
-					response.error(error);
-				}
-			});
-		},
-		error: function(error) {
-			response.error(error);
-		}
+	getPlaceData(geo_point ).then(function (geoResponse) {
+		var geoObject = JSON.parse(geoResponse.text ),
+			geoFields = getGeoFields(geoObject);
+		new Report().save({
+			geo_point: geo_point,
+			name: name,
+			category_id: category_id,
+			category: category,
+			status_id: status_id,
+			status: status,
+			description: description,
+			user: user,
+			file: file,
+			file_url: file_url,
+			created: now,
+			locality: geoFields.locality,
+			country: geoFields.country
+		}, {
+			success: function(report) {
+				var reportUpdate = new ReportUpdate();
+				reportUpdate.save({
+					geo_point: geo_point,
+					user: Parse.User.current(),
+					description: description,
+					report_id: report.id,
+					report: report,
+					file: file,
+					file_url: file_url,
+					status_id: status_id,
+					status: status,
+					user: user,
+					created: now
+				}, {
+					success: function(reportUpdate) {
+						report.updates = [reportUpdate];
+						response.success(report);
+					},
+					error: function(error) {
+						response.error(error);
+					}
+				});
+			},
+			error: function(error) {
+				response.error(error);
+			}
+		});
 	});
 });
 
@@ -137,14 +173,15 @@ Parse.Cloud.define('addReportUpdate', function(request, response) {
 		description = request.params.description || '',
 		status_id = request.params.status_id,
 		user = request.params.users,
-		file = request.params.file;
-
+		file = request.params.file,
+		file_url = file ? file.url() : '';
 	new ReportUpdate().save({
 		report_id: report_id,
 		description: description,
 		status_id: status_id,
 		user: user,
-		file: file
+		file: file,
+		file_url: file_url
 	}, {
 		success: function(reportUpdate) {
 			response.success(reportUpdate);
@@ -203,8 +240,9 @@ Parse.Cloud.define('getPointsInArea', function(request, response) {
 	var south_west = request.params.south_west,
 		north_east = request.params.north_east,
 		query = new Parse.Query(Report);
-
 	query.withinGeoBox('geo_point', south_west, north_east);
+	query.include('category');
+	query.include('status');
 	query.find({
 		success: function(reports) {
 			response.success(reports);
