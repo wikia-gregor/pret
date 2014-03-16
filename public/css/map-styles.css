@@ -5,7 +5,18 @@ html, body {
 	width:100%;
 }
 
+#map-container {
+	height:100%;
+	position:relative;
+	width:100%;
+}
+
 #map {
 	height:100%;
 	width:100%;
+}
+
+#categories-filter li {
+	list-style:none;
+	display:inline-block;
 }

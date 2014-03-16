@@ -4,6 +4,7 @@
 	<title>PRET map</title>
 
 	<link href="css/map-styles.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.17.min.js"></script>
 
 	<script src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=false"></script>
@@ -12,7 +13,17 @@
 </head>
 <body>
 
-	<div id="map"></div>
+	<div id="map-container">
+		<div id="map"></div>
+
+	</div>
+	<div class="sub-map-bar">
+		<ul id="city-selector">
+			<li>Warsaw</li>
+			<li>Poznan</li>
+		</ul>
+		<ul id="categories-filter"></ul>
+	</div>
 
 </body>
 </html>

@@ -28,7 +28,6 @@ var icons = {
 
 
 function initialize() {
-	console.log('initialize');
 	Parse.initialize("5bPOC1kbVMfqqw7QbW1SUH1YwZqbkLhbZziuaxmM", "kkU67mDdoOxhwj4yLEZs3LhXXKw2C2QzFDGLPkxB");
 
 	var cities = new Array();
@@ -62,14 +61,13 @@ var mapHelper = {};
 // markers storage
 mapHelper.markers = {};
 mapHelper.markersIb = [];
-mapHelper.categories = [];
+mapHelper.reportsByCategory = [];
+mapHelper.categories = {};
 mapHelper.infobox = new InfoBox();
-mapHelper.threshold = 5000;
+mapHelper.threshold = 200;
 mapHelper.LastChange = new Date().getTime()-(mapHelper.threshold+1);
 mapHelper.canRun = function() {
 	timestamp = new Date().getTime();
-	console.log(timestamp);
-	console.log(timestamp - mapHelper.LastChange);
 	if ( (timestamp - mapHelper.LastChange) > mapHelper.threshold ) {
 		return true
 	}
@@ -92,8 +90,12 @@ mapHelper.onMapChange = function(map) {
 			result.forEach(function(report) {
 				var geoPoint = report.get('geo_point'),
 					reportId = report.id,
+					categoryId = report.get('category_id'),
 					latLng = new google.maps.LatLng(geoPoint.latitude, geoPoint.longitude),
 					content = report.id;
+				if (mapHelper.reportsByCategory[categoryId] == undefined ) {
+					mapHelper.reportsByCategory[categoryId] = [];
+				}
 				if (mapHelper.markers[reportId] == undefined ) {
 					var marker = new google.maps.Marker({
 						position: latLng,
@@ -101,6 +103,7 @@ mapHelper.onMapChange = function(map) {
 						title: report.get('name'),
 						icon: icons['test'].icon
 					})
+					mapHelper.reportsByCategory[categoryId] = reportId;
 					mapHelper.markers[reportId] = marker;
 
 					google.maps.event.addListener(marker, 'click', function() {
@@ -109,7 +112,6 @@ mapHelper.onMapChange = function(map) {
 					});
 				}
 			});
-
 			var markerCluster = new MarkerClusterer(map, mapHelper.markers);
 		},
 		error: function(error) {
@@ -138,11 +140,20 @@ mapHelper.fetchCategories = function () {
 		success: function(result) {
 			result.models.forEach(function(category){
 				mapHelper.categories[category.id] = category.get('name');
+
 			});
+			mapHelper.showCategoriesButtons();
 		},
 		error: function(error) {
 		}
 	});
 
 
+
 };
+
+mapHelper.showCategoriesButtons = function() {
+	for(category in mapHelper.categories){
+		$("#categories-filter").append('<li id="'+category+'">'+mapHelper.categories[category]+"</li>");
+	};
+}
