@@ -312,11 +312,13 @@ Parse.Cloud.define('getReportsPerCategory', function(request, response) {
 		success: function(reports) {
 			var aggregate = {};
 			reports.forEach(function(report) {
-				var categoryName = report.get('category' ).get('name');
-				if (!aggregate[categoryName]) {
-					aggregate[categoryName] = 0;
+				if (report.get('category' )) {
+					var categoryName = report.get('category' ).get('name');
+					if (!aggregate[categoryName]) {
+						aggregate[categoryName] = 0;
+					}
+					aggregate[categoryName] += 1;
 				}
-				aggregate[categoryName] += 1;
 			});
 			response.success(aggregate);
 		},
