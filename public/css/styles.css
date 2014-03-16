@@ -26,6 +26,25 @@ nav {
 	display: inline-block;
 }
 
+nav a {
+	display: inline-block;
+	padding: 10px 20px;
+	border: 1px solid #59c39d;
+	position: relative;
+	top: 75px;
+	text-decoration: none;
+	color: #fff;
+	background-color: #2d6b6b;
+}
+
+nav a:visited {
+	color: #fff;
+}
+
+nav a:hover {
+	color: #59c39d;
+}
+
 #main h1 {
     margin-top: 0;
     font-size: 35px;
