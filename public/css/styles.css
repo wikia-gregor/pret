@@ -15,15 +15,17 @@ body {
 }
 
 #logo {
-	background: url( "../images/logo.png" );
+	background: url("../images/logo.png" );
 	display: inline-block;
-	width: 300px;
-	height: 157px;
+	width: 153px;
+	height: 80px;
 	text-indent: -9999px;
 }
 
 nav {
-	display: inline-block;
+	float: right;
+	position: relative;
+	top: 10px;
 }
 
 nav a {
@@ -31,7 +33,6 @@ nav a {
 	padding: 10px 20px;
 	border: 1px solid #59c39d;
 	position: relative;
-	top: 75px;
 	text-decoration: none;
 	color: #fff;
 	background-color: #2d6b6b;
@@ -45,8 +46,21 @@ nav a:hover {
 	color: #59c39d;
 }
 
+#counter {
+	height: 245px;
+	width: 1120px;
+	margin: 0 auto;
+	position: relative;
+	left: -60px;
+	background-color: #2d6b6b;
+}
+
+#counter img {
+	margin: 0px 0px 0px 230px;
+}
+
 #main h1 {
-    margin-top: 0;
+    margin: 0;
     font-size: 35px;
 }
 
