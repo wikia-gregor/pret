@@ -56,10 +56,14 @@ Parse.Cloud.define('getStatuses', function(request, response) {
 Parse.Cloud.define('getNumberOfReports', function(request, response) {
 	var days = request.params.days || 10,
 		status_id = request.params.status_id || false,
+		category_id = request.params.category_id || false,
 		query = new Parse.Query(Report);
 
 	if ( status_id ) {
 		query.equalTo('status_id', status_id);
+	}
+	if ( category_id ) {
+		query.equalTo('category_id', category_id);
 	}
 	query.greaterThan('createdAt', daysAgo(days));
 	query.count({
