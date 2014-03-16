@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:fb="http://ogp.me/ns/fb#">
+<html>
 	<head>
 		<meta charset="utf-8">
 		<title>PRET - Public Roads Evaluation Tool</title>
@@ -7,55 +7,91 @@
 		<link rel="stylesheet" href="css/reset.css">
 		<link rel="stylesheet" href="css/styles.css">
 		<link rel="stylesheet" href="css/spinner.css">
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 		<script src="http://www.parsecdn.com/js/parse-1.2.17.min.js"></script>
 		<script src="/js/config.js"></script>
 		<script type="text/javascript">
 			Parse.initialize( config.parse.appId, config.parse.jsKey );
 		</script>
+
+		<!-- maps -->
+		<link href="js/jquery.selectbox/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+		<link href="css/map-styles.css" type="text/css" rel="stylesheet">
+
+		<script src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=false"></script>
+		<script src="js/vendors/infobox.js" type="text/javascript"></script>
+		<script type="text/javascript" src="js/jquery.selectbox/js/jquery.selectbox-0.2.js"></script>
+		<script type="text/javascript" src="js/pret-map.js"></script>
+
 	</head>
 	<body>
 		<div id="fb-root"></div>
 		<div id="main">
-			<button id="fbLogin">Login</button>
-			<button id="fbLogout">Logout</button>
-			<h1 id="logo">PRET</h1>
-			<h2>Public Roads Evaulation Tool</h2>
-			<p>Together we make our roads <strong>pret</strong>ty.</p>
-			<h3>Recently added reports</h3>
+			<header>
+				<button id="fbLogin">Login</button>
+				<button id="fbLogout">Logout</button>
+				<h1 id="logo">PRET - Public Roads Evaluation Tool</h1>
+				<nav>
+					<a href="#map">Map</a>
+					<a href="#stats">Statistics</a>
+					<a href="#reports">New reports</a>
+				</nav>
+				<div id="counter">
+					<img src="images/counter.jpg" />
+				</div>
+			</header>
+
+			<div id="map-container">
+				<div id="map"></div>
+
+			</div>
+			<div class="sub-map-bar">
+				<select name="city-selector" id="city-selector" tabindex="1">
+					<option value="">-- Select country --</option>
+					<option value="1">Poznan</option>
+					<option value="9" selected="selected">Warsaw</option>
+				</select>
+
+				<ul id="categories-filter"></ul>
+			</div>
+			<div id="stats">
+				<h3>Reports Stats</h3>
+				<p>Total number of reports: <span id="reportsNo">0</span></p>
+				<div id="reportsBarsLoader" class="spinner">
+					<div class="dot1"></div>
+					<div class="dot2"></div>
+				</div>
+				<canvas id="reportsBars" width="400" height="250"></canvas>
+				<div id="reportsByCityBarsLoader" class="spinner">
+					<div class="dot1"></div>
+					<div class="dot2"></div>
+				</div>
+				<canvas id="reportsByCityBars" width="400" height="250"></canvas>
+				<h3>Categories</h3>
+				<div id="categoriesPieLoader" class="spinner">
+					<div class="dot1"></div>
+					<div class="dot2"></div>
+				</div>
+				<div id="categoriesPieContainer">
+					<canvas id="categoriesPie" width="400" height="250"></canvas>
+				</div>
+			</div>
+			<h3 id="reports">Recently added reports</h3>
 			<ul id="recentReports">
 				<div class="spinner">
 					<div class="dot1"></div>
 					<div class="dot2"></div>
 				</div>
 			</ul>
-			<h3>Reports Stats</h3>
-			<p>Total number of reports: <span id="reportsNo">0</span></p>
-			<div id="reportsBarsLoader" class="spinner">
-				<div class="dot1"></div>
-				<div class="dot2"></div>
-			</div>
-			<canvas id="reportsBars" width="400" height="250"></canvas>
-			<div id="reportsByCityBarsLoader" class="spinner">
-				<div class="dot1"></div>
-				<div class="dot2"></div>
-			</div>
-			<canvas id="reportsByCityBars" width="400" height="250"></canvas>
-			<h3>Categories</h3>
-			<div id="categoriesPieLoader" class="spinner">
-				<div class="dot1"></div>
-				<div class="dot2"></div>
-			</div>
-			<div id="categoriesPieContainer">
-				<canvas id="categoriesPie" width="400" height="250"></canvas>
-			</div>
 		</div>
+
 		<script src="/js/vendors/mustache/mustache.js"></script>
 		<script src="/js/app.js"></script>
 
 		<script src="/js/vendors/chartjs/chart.js"></script>
 		<script src="/js/charts/reports.js"></script>
 		<script src="/js/charts/categories.js"></script>
+
 		<footer>This is a hack-a-thon project made during <a href="http://ceehack.org/" target="_blank">Central Open Data Hackathon</a> by team of: <a href="https://github.com/wikia-gregor" target="_blank">Gregor</a>, <a href="https://github.com/aquilax" target="_blank">aquilax</a>, <a href="https://github.com/kamilkoterba" target="_blank">Kamil</a>, <a href="https://github.com/nandy-andy" target="_blank">nAndy</a> and <a href="" target="_blank">Łukasz</a> from <a href="http://www.wikia.com" target="_blank">Wikia</a>.</footer>
 	</body>
 </html>
