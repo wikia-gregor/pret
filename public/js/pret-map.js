@@ -157,3 +157,9 @@ mapHelper.showCategoriesButtons = function() {
 		$("#categories-filter").append('<li id="'+category+'">'+mapHelper.categories[category]+"</li>");
 	};
 }
+
+
+// run selectbox
+$(function () {
+	$("#city-selector").selectbox();
+});
