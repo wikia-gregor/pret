@@ -7,11 +7,11 @@ document.write(script);
 
 
 // custom markers
-var iconBase = '';
+var iconBase = 'img/';
 var icons = {
 	test: {
 		icon: new google.maps.MarkerImage(
-			iconBase + 'marker.png', //url
+			iconBase + 'flag_ico.png', //url
 			new google.maps.Size(30, 30),
 			new google.maps.Point(0, 0),
 			new google.maps.Point(0, 0),
@@ -95,7 +95,8 @@ mapHelper.onMapChange = function(map) {
 					var marker = new google.maps.Marker({
 						position: latLng,
 						map: map,
-						title: report.get('name')
+						title: report.get('name'),
+						icon: icons['test'].icon
 					})
 					mapHelper.markers[reportId] = marker;
 
