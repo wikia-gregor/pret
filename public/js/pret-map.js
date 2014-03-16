@@ -32,17 +32,12 @@ function initialize() {
 	Parse.initialize("5bPOC1kbVMfqqw7QbW1SUH1YwZqbkLhbZziuaxmM", "kkU67mDdoOxhwj4yLEZs3LhXXKw2C2QzFDGLPkxB");
 
 	var cities = new Array();
-
-	cities['Warsaw'] = new google.maps.LatLng(52.229676, 21.012229);
-	cities['Poznan'] = new google.maps.LatLng(52.406374, 16.925168);
 	var center = cities['Warsaw'];
-
 	var map = new google.maps.Map(document.getElementById('map'), {
 	zoom: 10,
 	center: center,
 	mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
-
 
 //Initialize map markers when it's ready
 google.maps.event.addListener(map, 'idle', function() {
@@ -52,6 +47,13 @@ google.maps.event.addListener(map, 'idle', function() {
 	}
 // do something only the first time the map is loaded
 });
+
+	// Set map center
+//	cities['Warsaw'] = new google.maps.LatLng(52.229676, 21.012229);
+//	cities['Poznan'] = new google.maps.LatLng(52.406374, 16.925168);
+	mapHelper.SetMapAddress(map, 'Warsaw');
+
+	mapHelper.fetchCategories();
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -60,6 +62,7 @@ var mapHelper = {};
 // markers storage
 mapHelper.markers = {};
 mapHelper.markersIb = [];
+mapHelper.categories = [];
 mapHelper.infobox = new InfoBox();
 mapHelper.threshold = 5000;
 mapHelper.LastChange = new Date().getTime()-(mapHelper.threshold+1);
@@ -114,4 +117,32 @@ mapHelper.onMapChange = function(map) {
 	});
 
 
-}
+};
+
+
+mapHelper.SetMapAddress = function (map, address) {  // "London, UK" for example
+	var geocoder = new google.maps.Geocoder();
+	if (geocoder) {
+		geocoder.geocode({ 'address': address }, function (results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				map.fitBounds(results[0].geometry.viewport);
+				map.setZoom(map.zoom+2);
+			}
+		});
+	}
+};
+
+mapHelper.fetchCategories = function () {
+
+	Parse.Cloud.run('getCategories', {}, {
+		success: function(result) {
+			result.models.forEach(function(category){
+				mapHelper.categories[category.id] = category.get('name');
+			});
+		},
+		error: function(error) {
+		}
+	});
+
+
+};
