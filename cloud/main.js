@@ -61,7 +61,7 @@ Parse.Cloud.define('getNumberOfReports', function(request, response) {
 	if ( status_id ) {
 		query.equalTo('status_id', status_id);
 	}
-	query.greaterThan('created', daysAgo(days));
+	query.greaterThan('createdAt', daysAgo(days));
 	query.count({
 		success: function(count) {
 			response.success(count);
@@ -262,15 +262,17 @@ Parse.Cloud.define('getLatestReports', function(request, response) {
 Parse.Cloud.define('getReportsPerCategory', function(request, response) {
 	var days = request.params.days || 10,
 		query = new Parse.Query(Report);
-	query.greaterThan('created', daysAgo(days));
+	query.greaterThan('createdAt', daysAgo(days));
+	query.include('category');
 	query.find({
 		success: function(reports) {
 			var aggregate = {};
 			reports.forEach(function(report) {
-				if (!aggregate[report.category.name]) {
-					aggregate[report.category.name] = 0;
+				var categoryName = report.get('category' ).get('name');
+				if (!aggregate[categoryName]) {
+					aggregate[categoryName] = 0;
 				}
-				aggregate[report.category.name] += 1;
+				aggregate[categoryName] += 1;
 			});
 			response.success(aggregate);
 		},
@@ -278,4 +280,18 @@ Parse.Cloud.define('getReportsPerCategory', function(request, response) {
 			response.error(error);
 		}
 	});
+});
+
+Parse.Cloud.define('getUserSubmissions', function(request, response) {
+	var user = request.params.user
+		query = new Parse.Query(Report);
+	query.equalTo('user', user);
+	query.find({
+		success: function(reports) {
+			response.success(reports);
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	})
 });
