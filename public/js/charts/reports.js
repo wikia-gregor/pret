@@ -1,19 +1,26 @@
 $(function() {
 	function renderReportsPerDays( reports ) {
+		var max = parseInt( reports[0], 10 );
+
 		// show total number of reports === reports from 30 days for now
-		$( "#reportsNo" ).text( reports[0] );
+		$( "#reportsNo" ).text( max );
 
 		var reportBarsWrapper = $( "#reportsBars" );
 		var reportsCtx = reportBarsWrapper.get(0).getContext("2d");
 		var data = {
 			labels: [ "30 days", "7 days", "Yesterday" ],
 			datasets: [{
-				fillColor: "rgba(151,187,205,0.5)",
-				strokeColor: "rgba(151,187,205,1)",
+				fillColor: "#2d6b6b",
+				strokeColor: "#59c39d",
 				data: reports
 			}]
 		};
-		var options = {};
+		var options = {
+			scaleOverride: true,
+			scaleSteps: max + 2,
+			scaleStepWidth : 1,
+			scaleStartValue : 0
+		};
 
 		new Chart( reportsCtx ).Bar( data, options );
 
@@ -33,8 +40,8 @@ $(function() {
 		var data = {
 			labels: cities,
 			datasets: [{
-				fillColor: "rgba(151,187,205,0.5)",
-				strokeColor: "rgba(151,187,205,1)",
+				fillColor: "#2d6b6b",
+				strokeColor: "#59c39d",
 				data: cityReports
 			}]
 		};
