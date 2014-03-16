@@ -45,7 +45,7 @@ function initialize() {
 
 
 //Initialize map markers when it's ready
-google.maps.event.addListenerOnce(map, 'idle', function() {
+google.maps.event.addListener(map, 'idle', function() {
 	if ( mapHelper.canRun() ) {
 		mapHelper.LastChange = new Date().getTime();
 		mapHelper.onMapChange(map);
@@ -70,6 +70,7 @@ mapHelper.canRun = function() {
 	if ( (timestamp - mapHelper.LastChange) > mapHelper.threshold ) {
 		return true
 	}
+	return false;
 };
 
 
@@ -87,19 +88,22 @@ mapHelper.onMapChange = function(map) {
 			// Add markers
 			result.forEach(function(report) {
 				var geoPoint = report.get('geo_point'),
-					reportId = report.get('id'),
+					reportId = report.id,
 					latLng = new google.maps.LatLng(geoPoint.latitude, geoPoint.longitude),
-					content = report.id,
-
-					marker = new google.maps.Marker({
+					content = report.id;
+				if (mapHelper.markers[reportId] == undefined ) {
+					var marker = new google.maps.Marker({
 						position: latLng,
 						map: map,
 						title: report.get('name')
+					})
+					mapHelper.markers[reportId] = marker;
+
+					google.maps.event.addListener(marker, 'click', function() {
+						infowindow.setContent(content);
+						infowindow.open(map, marker);
 					});
-				google.maps.event.addListener(marker, 'click', function() {
-					infowindow.setContent(content);
-					infowindow.open(map, marker);
-				});
+				}
 			});
 
 			var markerCluster = new MarkerClusterer(map, mapHelper.markers);
