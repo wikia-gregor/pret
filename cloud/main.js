@@ -29,7 +29,7 @@ function getGeoFields (data) {
 			if (row.types.indexOf('locality') != -1 ) {
 				result.locality = row.long_name;
 			}
-			if (row.types.indexOf('country')) {
+			if (row.types.indexOf('country') != -1 ) {
 				result.country = row.long_name;
 			}
 		});
