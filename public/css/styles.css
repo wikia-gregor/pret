@@ -5,20 +5,25 @@ body {
 }
 
 #main {
-    width: 500px;
+    width: 1000px;
     margin: 20px auto;
     text-align: left;
     background: white;
-    padding: 50px 60px;
+    padding: 10px 60px 50px 60px;
     border: solid #ddd;
     border-width: 0 1px 1px 1px;
 }
 
 #logo {
 	background: url( "../images/logo.png" );
+	display: inline-block;
 	width: 300px;
 	height: 157px;
 	text-indent: -9999px;
+}
+
+nav {
+	display: inline-block;
 }
 
 #main h1 {
@@ -83,6 +88,11 @@ body {
 #reportsByCityBars,
 #categoriesPieContainer {
 	display: none;
+}
+
+#map {
+	width: 900px;
+	height: 500px;
 }
 
 footer {
