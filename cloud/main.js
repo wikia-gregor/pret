@@ -328,13 +328,38 @@ Parse.Cloud.define('getReportsPerCategory', function(request, response) {
 	});
 });
 
+Parse.Cloud.define('getReportsPerStatus', function(request, response) {
+	var days = request.params.days || 10,
+		query = new Parse.Query(Report);
+	query.greaterThan('createdAt', daysAgo(days));
+	query.include('status');
+	query.find({
+		success: function(reports) {
+			var aggregate = {};
+			reports.forEach(function(report) {
+				if (report.get('status' )) {
+					var statusName = report.get('status' ).get('name');
+					if (!aggregate[statusName]) {
+						aggregate[statusName] = 0;
+					}
+					aggregate[statusName] += 1;
+				}
+			});
+			response.success(aggregate);
+		},
+		error: function(error) {
+			response.error(error);
+		}
+	});
+});
+
 Parse.Cloud.define('getReportsPerField', function(request, response) {
 	var days = request.params.days || 10,
 		group_name = request.params.group_name || 'locality',
 		query = new Parse.Query(Report),
 		fields = [
 			'country',
-			'locality',
+			'locality'
 		];
 	query.greaterThan('createdAt', daysAgo(days));
 	if (fields.indexOf(group_name) === -1) {
