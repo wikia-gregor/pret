@@ -28,7 +28,7 @@ var icons = {
 
 
 function initialize() {
-	Parse.initialize("5bPOC1kbVMfqqw7QbW1SUH1YwZqbkLhbZziuaxmM", "kkU67mDdoOxhwj4yLEZs3LhXXKw2C2QzFDGLPkxB");
+//	Parse.initialize("5bPOC1kbVMfqqw7QbW1SUH1YwZqbkLhbZziuaxmM", "kkU67mDdoOxhwj4yLEZs3LhXXKw2C2QzFDGLPkxB");
 
 	var cities = new Array();
 	var center = cities['Warsaw'];
