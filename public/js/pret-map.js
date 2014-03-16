@@ -153,8 +153,10 @@ mapHelper.fetchCategories = function () {
 };
 
 mapHelper.showCategoriesButtons = function() {
+	var active = ' class="active"';
 	for(category in mapHelper.categories){
-		$("#categories-filter").append('<li id="'+category+'">'+mapHelper.categories[category]+"</li>");
+		$("#categories-filter").append('<li id="'+category+'"'+active+'>'+mapHelper.categories[category]+"</li>");
+		active = '';
 	};
 }
 
