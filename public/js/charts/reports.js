@@ -30,8 +30,14 @@ $(function() {
 
 	function renderReportsPerCity( reports ) {
 		// mocked data
-		var cities = [ "Poznań", "Warszawa", "Kraków", "Berlin", "Olsztyn" ];
-		var cityReports = [ 80, 75, 76, 20, 82 ];
+		var cities = [],
+			cityReports = [],
+			max = 0;
+		Object.keys( reports ).forEach(function( key ){
+			cities.push( key );
+			cityReports.push( reports[key] );
+			max = reports[key] > max ? reports[key] : max;
+		});
 
 		var reportsByCityBarsWrapper = $( "#reportsByCityBars" );
 		var cityReportsCtx = reportsByCityBarsWrapper.get(0).getContext("2d");
@@ -47,8 +53,8 @@ $(function() {
 		};
 		var options = {
 			scaleOverride: true,
-			scaleSteps : 10,
-			scaleStepWidth : 10,
+			scaleSteps : max,
+			scaleStepWidth : 1,
 			scaleStartValue : 0
 		};
 
@@ -73,5 +79,12 @@ $(function() {
 		}
 	);
 
-	renderReportsPerCity();
+	Parse.Cloud.run( 'getReportsPerField', { group_name: 'locality' }, {
+		success: function (reports) {
+			renderReportsPerCity(reports)
+		},
+		error: function (error) {
+			console.log(error);
+		}
+	});
 });
