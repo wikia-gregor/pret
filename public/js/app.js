@@ -4,6 +4,7 @@ $( document ).ready( function() {
 	var currentUser = Parse.User.current();
 
 	// Facebook
+	/*
 	$.getScript( '//connect.facebook.net/en_UK/all.js', function() {
 		Parse.FacebookUtils.init( {
 			appId      : config.fb.appId,
@@ -36,6 +37,7 @@ $( document ).ready( function() {
 			fbLogin.show();
 		} );
 	} );
+	*/
 
 	// Getting & displaying latest reports
 	Parse.Cloud.run( 'getLatestReports', {}, {
