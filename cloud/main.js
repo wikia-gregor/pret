@@ -286,10 +286,25 @@ Parse.Cloud.define('getReportsPerCategory', function(request, response) {
 	});
 });
 
-Parse.Cloud.define('getUserSubmissions', function(request, response) {
-	var user = request.params.user
+Parse.Cloud.define('getReports', function(request, response) {
+	var user = request.params.user || false,
+		category_id = request.params.category_id || false,
+		status_id = request.params.status_id || false,
+		limit = request.params.status_id || 10,
+		offset = request.params.offset || 0,
 		query = new Parse.Query(Report);
-	query.equalTo('user', user);
+
+	if (user) {
+		query.equalTo('user', user);
+	}
+	if (category_id) {
+		query.equalTo('category_id', category_id);
+	}
+	if (status_id) {
+		query.equalTo('status_id', status_id);
+	}
+	query.skip(offset);
+	query.limit(limit);
 	query.find({
 		success: function(reports) {
 			response.success(reports);
